@@ -69,7 +69,7 @@
 				scrollTop:9999,
 				isScroll:true,//是否可以滑动
 				userAvatar: '',//头像
-				apiurl: 'url',
+				apiurl: 'url',//接口地址
 				apisucc: true,
 				apibut: 'api检测中,请稍等...',
 				sentext: '发送',
