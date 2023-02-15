@@ -14,6 +14,9 @@
 				<image src="../../static/QRcode.jpg" mode="aspectFit"></image>
 			</view>
 		</uni-popup>
+		<view class="advertising">
+			<ad unit-id="adunit-ff48d59f501d5294"></ad>
+		</view>
 	</view>
 </template>
 
@@ -75,6 +78,10 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
+		.advertising{
+			position: fixed;
+			bottom: 0;
+		}
 		button{
 			margin-bottom: 30rpx;
 			width: 250rpx;

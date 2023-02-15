@@ -1,7 +1,11 @@
 <template>
 	<view class="bg">
 		<image src="../../static/6.png" mode="scaleToFill" class="bg-img"></image>
-		<scroll-view scroll-with-animation :scroll-y="isScroll" :scroll-top="scrollTop" style="width: 100%;padding-top: 140rpx;">
+		<view class="advertising">
+			<ad unit-id="adunit-94ed6bcc5bb80d7f"></ad>
+		</view>
+		<scroll-view scroll-with-animation :scroll-y="isScroll" :scroll-top="scrollTop" style="width: 100%;">
+			
 			<!-- 用来获取消息体高度 -->
 			<view id="okk" scroll-with-animation>
 				<!-- 消息 -->
@@ -44,7 +48,7 @@
 				<input v-model="msg" class="dh-input" type="text" @confirm="sendMsg" confirm-type="search"
 					placeholder-class="my-neirong-sm" placeholder="描述您的问题" @blur="isScroll=true;" @focus="isScroll=false;"/>
 
-				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{sentext}}</button>
+				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{isRequesting?'请求中...':sentext}}</button>
 			</view>
 		</view>
 		<!-- <uni-popup ref="popup" type="center">
@@ -66,17 +70,20 @@
 	export default {
 		data() {
 			return {
+				rewardedVideoAd:null,//广告
+				num:1,//次数
 				scrollTop:9999,
 				isScroll:true,//是否可以滑动
 				userAvatar: '',//头像
-				apiurl: 'url',//接口地址
+				apiurl: 'https://flask-web-framework-s-gkhnhvucgc.cn-hangzhou.fcapp.run',
 				apisucc: true,
 				apibut: 'api检测中,请稍等...',
-				sentext: '发送',
+				// sentext: '发送',
 				// apiadj: '在此输入你的APIKEY',
 				api: '',
 				msgLoad: false,
 				anData: {},
+				isRequesting:false,
 				animationData: {},
 				showTow: false,
 				msgList: [{
@@ -87,8 +94,28 @@
 				msg: ""
 			}
 		},
-
+		computed:{
+			sentext:function(){
+				return `发送(${this.num}次)`
+			}
+		},
 		onLoad() {
+			// 激励广告
+			if(wx.createRewardedVideoAd){
+			      this.rewardedVideoAd = wx.createRewardedVideoAd({ adUnitId: 'adunit-29ff42bda9593523' })
+			      this.rewardedVideoAd.onLoad(() => {
+			        console.log('onLoad event emit')
+			      })
+			      this.rewardedVideoAd.onError((err) => {
+			        console.log('onError event emit', err)
+			      })
+			      this.rewardedVideoAd.onClose((res) => {
+			        console.log('onClose event emit', res)
+					if(res.isEnded){
+						this.num=5
+					}
+			      })
+			    }
 			wx.showShareMenu({
 			        withShareTicket:true,
 			        //设置下方的Menus菜单，才能够让发送给朋友与分享到朋友圈两个按钮可以点击
@@ -168,6 +195,11 @@
 
 			// },
 			sendMsg() {
+				if(this.num<=0){
+					this.rewardedVideoAd.show()
+					return
+				}
+				this.isRequesting=true;
 				// 消息为空不做任何操作
 				if (this.msg == "") {
 					return 0;
@@ -176,7 +208,7 @@
 					this.$u.toast('请先配置api再进行使用')
 					return 0
 				}
-				this.sentext = '请求中'
+				// this.sentext = '请求中'
 				this.msgList.push({
 					"msg": this.msg,
 					"my": true
@@ -203,10 +235,11 @@
 								"msg": text,
 								"my": false
 							})
-							
+							this.isRequesting=false;
+							this.num--
 							this.msgContent += (text + "\n")
 							this.msgLoad = false
-							this.sentext = '发送'
+							// this.sentext = `发送(${this.num}次)`
 							this.scrollToBottom()
 						} else {
 							this.apibut = '连接失败，请检查apikey后重试'
@@ -232,7 +265,9 @@
 	page {
 		height: 100%;
 	}
-
+	.advertising{
+		
+	}
 	.bg {
 		/* overflow: scroll; */
 		/* background: url('../../static/6.png') no-repeat;
