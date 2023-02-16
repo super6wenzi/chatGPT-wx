@@ -75,7 +75,7 @@
 				scrollTop:9999,
 				isScroll:true,//是否可以滑动
 				userAvatar: '',//头像
-				apiurl: 'https://flask-web-framework-s-gkhnhvucgc.cn-hangzhou.fcapp.run',
+				apiurl: '',
 				apisucc: true,
 				apibut: 'api检测中,请稍等...',
 				// sentext: '发送',
