@@ -48,7 +48,7 @@
 				<input v-model="msg" class="dh-input" type="text" @confirm="sendMsg" confirm-type="search"
 					placeholder-class="my-neirong-sm" placeholder="描述您的问题" @blur="isScroll=true;" @focus="isScroll=false;"/>
 
-				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{isRequesting?'请求中...':sentext}}</button>
+				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{num<=0?'获取次数':isRequesting?'请求中...':sentext}}</button>
 			</view>
 		</view>
 		<!-- <uni-popup ref="popup" type="center">
