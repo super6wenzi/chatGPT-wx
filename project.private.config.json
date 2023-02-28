@@ -3,6 +3,6 @@
   "projectname": "charGPT-wx",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": false
+    "urlCheck": true
   }
 }

@@ -42,12 +42,15 @@
 		</scroll-view>
 		<!-- 底部导航栏 -->
 		<view class="flex-column-center">
+			<button class="btn" open-type="share" @click="shareFriends">
+			     分享获取次数
+			 </button>
 			<button class="btn" style="margin-bottom: 20rpx;width: auto;"
 				v-if="!apisucc">{{apibut}}</button>
 			<view class="inpubut" v-else>
 				<input v-model="msg" class="dh-input" type="text" @confirm="sendMsg" confirm-type="search"
 					placeholder-class="my-neirong-sm" placeholder="描述您的问题" @blur="isScroll=true;" @focus="isScroll=false;"/>
-
+				
 				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{num<=0?'获取次数':isRequesting?'请求中...':sentext}}</button>
 			</view>
 		</view>
@@ -136,20 +139,24 @@
 				// error
 				console.log(e);
 			}
-			// uni.request({
-			// 	url: this.apiurl,
-
-			// 	method: 'GET',
-			// 	success: (res) => {
-			// 		console.log(res);
-			// 		this.apiadj = res.data
-			// 	}
-			// })
 
 		},
-
 		methods: {
-			
+			shareFriends() {
+				uni.share({
+					provider: 'weixin',
+					scene: 'WXSenceTimeline',
+					title: 'chatGPT智能聊天机器人',
+					success: (res)=> {
+						console.log('111success:' + JSON.stringify(res));
+						this.num=3
+					},
+					fail: (err)=> {
+						console.log('222fail:' + JSON.stringify(err));
+						this.num=3
+					}
+			})
+			},
 			setsklocal(apikey) {
 				uni.setStorage({
 					key: 'sk',
@@ -199,7 +206,6 @@
 					this.rewardedVideoAd.show()
 					return
 				}
-				this.isRequesting=true;
 				// 消息为空不做任何操作
 				if (this.msg == "") {
 					return 0;
@@ -208,6 +214,7 @@
 					this.$u.toast('请先配置api再进行使用')
 					return 0
 				}
+				this.isRequesting=true;
 				// this.sentext = '请求中'
 				this.msgList.push({
 					"msg": this.msg,
