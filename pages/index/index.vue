@@ -42,7 +42,7 @@
 		</scroll-view>
 		<!-- 底部导航栏 -->
 		<view class="flex-column-center">
-			<button class="btn" open-type="share" @click="shareFriends">
+			<button class="btn" open-type="share" @click="shareFriends" v-if="showShareBtn">
 			     分享获取次数
 			 </button>
 			<button class="btn" style="margin-bottom: 20rpx;width: auto;"
@@ -73,17 +73,17 @@
 	export default {
 		data() {
 			return {
+				showShareBtn:true,
 				rewardedVideoAd:null,//广告
 				num:1,//次数
 				scrollTop:9999,
 				isScroll:true,//是否可以滑动
 				userAvatar: '',//头像
-				apiurl: '',
+				apiurl: 'https://flask-web-framework-s-gkhnhvucgc.cn-hangzhou.fcapp.run',
 				apisucc: true,
 				apibut: 'api检测中,请稍等...',
 				// sentext: '发送',
 				// apiadj: '在此输入你的APIKEY',
-				api: '',
 				msgLoad: false,
 				anData: {},
 				isRequesting:false,
@@ -149,13 +149,13 @@
 					title: 'chatGPT智能聊天机器人',
 					success: (res)=> {
 						console.log('111success:' + JSON.stringify(res));
-						this.num=3
 					},
 					fail: (err)=> {
 						console.log('222fail:' + JSON.stringify(err));
-						this.num=3
 					}
 			})
+			this.num=3;
+			this.showShareBtn=false;
 			},
 			setsklocal(apikey) {
 				uni.setStorage({
