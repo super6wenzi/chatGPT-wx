@@ -54,18 +54,6 @@
 				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{num<=0?'获取次数':isRequesting?'请求中...':sentext}}</button>
 			</view>
 		</view>
-		<!-- <uni-popup ref="popup" type="center">
-			<view class="popcls">
-				<view class="uni-textarea" style="width: 90%;margin: 20rpx 20rpx;border: 1px solid #000000;">
-					<textarea style="width: 100%; " placeholder-style="color:#F76260" :placeholder="apiadj"
-						v-model="api" />
-				</view>
-				<view style="display: flex;flex-direction: row;">
-					<button style="margin: 10rpx;" type="primary" @click="apiset">确认</button>
-					<button style="margin: 10rpx;" @click="clopop">取消</button>
-				</view>
-			</view>
-		</uni-popup> -->
 	</view>
 </template>
 
@@ -75,15 +63,14 @@
 			return {
 				showShareBtn:true,
 				rewardedVideoAd:null,//广告
-				num:1,//次数
+				num:5,//次数
 				scrollTop:9999,
 				isScroll:true,//是否可以滑动
 				userAvatar: '',//头像
-				apiurl: 'https://flask-web-framework-s-gkhnhvucgc.cn-hangzhou.fcapp.run',
+				apiurl: 'https://chatgptphp-test-chatgptphp-test-gkdskunsqv.ap-southeast-1.fcapp.run',
 				apisucc: true,
 				apibut: 'api检测中,请稍等...',
-				// sentext: '发送',
-				// apiadj: '在此输入你的APIKEY',
+				api: '',//在此填入你的chatGPT  APIkey
 				msgLoad: false,
 				anData: {},
 				isRequesting:false,
@@ -93,7 +80,7 @@
 					my: false,
 					msg: "年轻人，我看你很迷茫。想要问些什么？"
 				}],
-				msgContent: "",
+				msgContent: [],
 				msg: ""
 			}
 		},
@@ -127,19 +114,6 @@
 		
 			const that = this;
 			this.userAvatar = uni.getStorageSync('user-avatar')
-			// this.apiset()
-			try {
-				const value = uni.getStorageSync('sk');
-				// if (value) {
-				// 	console.log(value);
-				// 	this.api = value
-
-				// }
-			} catch (e) {
-				// error
-				console.log(e);
-			}
-
 		},
 		methods: {
 			shareFriends() {
@@ -157,50 +131,7 @@
 			this.num=3;
 			this.showShareBtn=false;
 			},
-			setsklocal(apikey) {
-				uni.setStorage({
-					key: 'sk',
-					data: apikey,
-					success: function(res) {
-						console.log('success', res);
-					}
-				});
-			},
-			clopop() {
-				this.$refs.popup.close('center')
-			},
-			openpop() {
-				this.$refs.popup.open('center')
-			},
-			// apiset() {
-			// 	// this.$refs.popup.close('center')
-			// 	this.apibut = 'api检测中,请稍等...'
-			// 	let data = JSON.stringify({
-			// 		msg: "你好",
-			// 		// openaikey: this.api
-			// 	})
-			// 	uni.request({
-			// 		url: this.apiurl + '/message',
-			// 		data: data,
-			// 		method: 'POST',
-			// 		success: (res) => {
-			// 			console.log('suc', res, res.data.code)
-			// 			if (res.data.code == 200) {
-			// 				this.apibut = '连接成功',
-			// 					this.apisucc = true
-			// 				this.sentext = '发送'
-			// 				this.msgLoad = false
-			// 				this.setsklocal(this.api)
-			// 			} else {
-			// 				this.apibut = '连接失败，请检查apikey后重试'
-			// 			}
-			// 		},
-			// 		fail:(err)=> {
-			// 			this.apibut = '连接失败，请检查apikey后重试'
-			// 		}
-			// 	})
-
-			// },
+			
 			sendMsg() {
 				if(this.num<=0){
 					this.rewardedVideoAd.show()
@@ -210,48 +141,46 @@
 				if (this.msg == "") {
 					return 0;
 				}
-				if (this.msgLoad == true) {
-					this.$u.toast('请先配置api再进行使用')
-					return 0
-				}
 				this.isRequesting=true;
-				// this.sentext = '请求中'
 				this.msgList.push({
 					"msg": this.msg,
 					"my": true
 				})
-				this.msgContent += ('YOU:' + this.msg + "\n")
-				console.log(this.msgContent);
+				this.msgContent.push({
+					"role": "user",
+					"content": this.msg,
+				})
 				this.msgLoad = true
 				// 清除消息
 				this.msg = ""
 				let data = JSON.stringify({
-					msg: this.msgContent,
-					openaikey: this.api
+					body: this.msgContent,
+					apiKey:this.api
 				})
 				uni.request({
 					url: this.apiurl + '/message',
 					data: data,
 					method: 'POST',
 					success: (res) => {
-						if (res.data.code == 200) {
-							let text = res.data.resmsg.replace("openai:", "").replace("openai：", "")
-								.replace(/^\n|\n$/g, "")
-							console.log(text);
+						// if (res.data.code == 200) {
+							let text = res.data.choices[0].message.content.replace("openai:", "").replace("openai：", "").replace(/^\n|\n$/g, "")
 							this.msgList.push({
 								"msg": text,
 								"my": false
 							})
 							this.isRequesting=false;
 							this.num--
-							this.msgContent += (text + "\n")
+							this.msgContent.push({
+								"role": res.data.choices[0].message.role,
+								"content": text,
+							})
 							this.msgLoad = false
 							// this.sentext = `发送(${this.num}次)`
 							this.scrollToBottom()
-						} else {
-							this.apibut = '连接失败，请检查apikey后重试'
-							this.apisucc = false
-						}
+						// } else {
+						// 	this.apibut = '连接失败，请检查apikey后重试'
+						// 	this.apisucc = false
+						// }
 					},
 					fail: (err) => {
 						console.log(3344444,'失败');
