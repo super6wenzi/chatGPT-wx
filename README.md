@@ -13,4 +13,4 @@ chatGPT体验在公众号：
 或者直接小程序搜索：GG智能聊天AI机器人
 
 有问题加我微信吧   备注chatGPT
-![8328c9873223df2d247422f9a6f05b7](https://user-images.githubusercontent.com/48462615/221452207-969c7283-a946-4c2f-9ea6-8f5c89ec1503.jpg)
+![code(1)](https://user-images.githubusercontent.com/48462615/223733225-44475a84-7d97-4011-89cf-7acad9128ca6.jpg)
