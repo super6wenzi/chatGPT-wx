@@ -41,7 +41,12 @@
 			</view>
 		</scroll-view>
 		<!-- 底部导航栏 -->
+		
 		<view class="flex-column-center">
+			<button class="btn" v-if="error">
+			     服务端发生错误，请刷新后重试
+			 </button>
+			 <block v-else>
 			<button class="btn" open-type="share" @click="shareFriends" v-if="showShareBtn">
 			     分享获取次数
 			 </button>
@@ -50,10 +55,11 @@
 			<view class="inpubut" v-else>
 				<input v-model="msg" class="dh-input" type="text" @confirm="sendMsg" confirm-type="search"
 					placeholder-class="my-neirong-sm" placeholder="描述您的问题" @blur="isScroll=true;" @focus="isScroll=false;"/>
-				
 				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{num<=0?'获取次数':isRequesting?'请求中...':sentext}}</button>
 			</view>
+			</block>
 		</view>
+		
 	</view>
 </template>
 
@@ -61,16 +67,15 @@
 	export default {
 		data() {
 			return {
+				error:false,
 				showShareBtn:true,
 				rewardedVideoAd:null,//广告
 				num:5,//次数
 				scrollTop:9999,
 				isScroll:true,//是否可以滑动
 				userAvatar: '',//头像
-				apiurl: 'https://chatgptphp-test-chatgptphp-test-gkdskunsqv.ap-southeast-1.fcapp.run',
 				apisucc: true,
 				apibut: 'api检测中,请稍等...',
-				api: '',//在此填入你的chatGPT  APIkey
 				msgLoad: false,
 				anData: {},
 				isRequesting:false,
@@ -184,6 +189,7 @@
 					},
 					fail: (err) => {
 						console.log(3344444,'失败');
+						this.error=true
 					}
 				})
 			},
@@ -308,7 +314,7 @@
 	.btn {
 		height: 80rpx;
 		line-height: 80rpx;
-		width: 35%;
+		white-space: nowrap;
 		background: linear-gradient(to right, #008FFF, #29C8FC);
 		color: #ffffff;
 		font-size: 32rpx;
