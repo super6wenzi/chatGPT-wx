@@ -4,12 +4,11 @@
 		<view class="advertising">
 			<ad unit-id="adunit-94ed6bcc5bb80d7f"></ad>
 		</view>
-		<scroll-view scroll-with-animation :scroll-y="isScroll" :scroll-top="scrollTop" style="width: 100%;">
-			
+		<scroll-view scroll-with-animation :scroll-y="isScroll" style="width: 100%;" :scroll-into-view="intoindex">
 			<!-- 用来获取消息体高度 -->
 			<view id="okk" scroll-with-animation>
 				<!-- 消息 -->
-				<view class="flex-column-start" v-for="(x,i) in msgList" :key="i">
+				<view class="flex-column-start" v-for="(x,i) in msgList" :key="i" :id="'text'+i">
 					<!-- 用户消息 头像可选加入-->
 					<view v-if="x.my" class="userinfo">
 						<view class="flex justify-end my-info">
@@ -23,14 +22,14 @@
 						</view>
 					</view>
 					<!-- 机器人消息 -->
-					<view v-if="!x.my" class="aiinfo">
+					<view v-if="!x.my" class="aiinfo" >
 						<view class="chat-img ">
 							<image style="height: 100rpx;width: 100rpx;" src="../../static/9.jpg" mode="scaleToFill">
 							</image>
 						</view>
 						<view class="flex" style="max-width: 500rpx;">
 							<view class="aimsg" style="border-radius: 35rpx;background-color: #f9f9f9;">
-								<text style="word-break: break-all;">{{x.msg}}</text>
+								<text style="word-break: break-all;">{{x.output}}</text>
 							</view>
 						</view>
 					</view>
@@ -50,9 +49,7 @@
 			<button class="btn" open-type="share" @click="shareFriends" v-if="showShareBtn">
 			     分享获取次数
 			 </button>
-			<button class="btn" style="margin-bottom: 20rpx;width: auto;"
-				v-if="!apisucc">{{apibut}}</button>
-			<view class="inpubut" v-else>
+			<view class="inpubut">
 				<input v-model="msg" class="dh-input" type="text" @confirm="sendMsg" confirm-type="search"
 					placeholder-class="my-neirong-sm" placeholder="描述您的问题" @blur="isScroll=true;" @focus="isScroll=false;"/>
 				<button @click="sendMsg" :disabled="msgLoad" class="btn">{{num<=0?'获取次数':isRequesting?'请求中...':sentext}}</button>
@@ -64,26 +61,35 @@
 </template>
 
 <script>
+	import EasyTyper from 'easy-typer-js'
 	export default {
 		data() {
 			return {
+				intoindex:'',
 				error:false,
 				showShareBtn:true,
 				rewardedVideoAd:null,//广告
 				num:5,//次数
-				scrollTop:9999,
+				apiurl:'',//后端转发地址
+				api:'',//在此输入你的apikey
 				isScroll:true,//是否可以滑动
 				userAvatar: '',//头像
-				apisucc: true,
-				apibut: 'api检测中,请稍等...',
 				msgLoad: false,
 				anData: {},
 				isRequesting:false,
 				animationData: {},
 				showTow: false,
 				msgList: [{
-					my: false,
-					msg: "年轻人，我看你很迷茫。想要问些什么？"
+					// my: false,
+					// msg: "年轻人，我看你很迷茫。想要问些什么？"
+					output: '年轻人，我看你很迷茫。想要问些什么？',
+					isEnd: false,
+					speed: 80,
+					singleBack: false,
+					sleep: 0,
+					type: 'normal',
+					backSpeed: 40,
+					sentencePause: false
 				}],
 				msgContent: [],
 				msg: ""
@@ -138,6 +144,7 @@
 			},
 			
 			sendMsg() {
+				const that=this;
 				if(this.num<=0){
 					this.rewardedVideoAd.show()
 					return
@@ -167,25 +174,38 @@
 					data: data,
 					method: 'POST',
 					success: (res) => {
-						// if (res.data.code == 200) {
-							let text = res.data.choices[0].message.content.replace("openai:", "").replace("openai：", "").replace(/^\n|\n$/g, "")
+						if (res.data.code == 200) {
+							let text = res.data.data.choices[0].message.content.replace("openai:", "").replace("openai：", "").replace(/^\n|\n$/g, "")
+							// this.msgList.push({
+							// 	"msg": text,
+							// 	"my": false
+							// })
 							this.msgList.push({
-								"msg": text,
-								"my": false
+								output: '',
+								isEnd: false,
+								speed: 100,
+								singleBack: false,
+								sleep: 0,
+								type: 'normal',
+								backSpeed: 40,
+								sentencePause: false
 							})
+							new EasyTyper(this.msgList[this.msgList.length-1], text)
 							this.isRequesting=false;
 							this.num--
 							this.msgContent.push({
-								"role": res.data.choices[0].message.role,
+								"role": res.data.data.choices[0].message.role,
 								"content": text,
 							})
 							this.msgLoad = false
 							// this.sentext = `发送(${this.num}次)`
-							this.scrollToBottom()
-						// } else {
-						// 	this.apibut = '连接失败，请检查apikey后重试'
-						// 	this.apisucc = false
-						// }
+							this.$nextTick(()=> {
+								that.intoindex = "text" + (this.msgList.length-1)
+								console.log(44555,that.intoindex);
+							});
+						} else {
+							this.error=true
+						}
 					},
 					fail: (err) => {
 						console.log(3344444,'失败');
@@ -193,12 +213,7 @@
 					}
 				})
 			},
-			scrollToBottom(){
-				const that=this;
-				setTimeout(()=>{
-					that.scrollTop++
-				},500)
-			},
+			
 		}
 	}
 </script>
@@ -297,7 +312,7 @@
 	}
 
 	.dh-input {
-		width: 90%;
+		width: 70%;
 		height: 80rpx;
 		border-radius: 100rpx;
 		padding-left: 40rpx;

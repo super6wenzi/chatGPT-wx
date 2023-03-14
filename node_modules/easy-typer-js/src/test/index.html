@@ -1,0 +1,80 @@
+<!-- 双击此文件测试 -->
+<script src="./index.js"></script>
+<style>
+  .easy-typed-cursor {
+    margin-left: 10px;
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+  }
+  .output-wrapper {
+    margin-top: 30vh;
+    text-align: center;
+    font-size: 20px;
+  }
+  .img {
+    width: 300px;
+  }
+  .img-2 {
+    width: 100px;
+  }
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes blink {
+    0% {
+      opacity: 1;
+    }
+      
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+    
+</style>
+<div class="output-wrapper"><span id="output"></span><span class="easy-typed-cursor">|</span></div>
+<script>
+  const obj = {
+    output: '', // 输出内容  使用MVVM框架时可以直接使用
+    type: 'rollback',
+    isEnd: false,
+    speed: 80,
+    backSpeed: 40,
+    sleep: 3000,
+    singleBack: true,
+    sentencePause: true
+  }
+  const textList = [`黎明前的黑暗是最深不见底的黑暗！`, `世界上本没有无用的齿轮，只有齿轮自身能决定它的用途！`, `天不生我彭小呆，万古长青一生狂！`]
+  const typing = new EasyTyper(obj, textList, ()=>{
+    // 此回调结束了easyTyper的生命周期
+    console.log('结束了，我的使命！')
+  }, (output, instance) => {
+    // 钩子函数，每一帧的数据获取和实例EasyTyper的获取
+    console.log(output)
+    document.getElementById('output').innerHTML = `${output}`
+  })
+</script>

@@ -1,0 +1,31 @@
+{
+  "name": "easy-typer-js",
+  "version": "2.1.0",
+  "description": "Very powerful JS typewriter plugin, compatible with native JS and MVVM class framework (Vue, React...), whatever you want to output.",
+  "repository": "https://github.com/pengqiangsheng/easy-typer-js",
+  "homepage": "https://github.com/pengqiangsheng/easy-typer-js",
+  "main": "src/lib/index.js",
+  "types": "src/lib/index.d.ts",
+  "author": "pqs 2945802136@qq.com",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "release": "tsc && npm publish",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-typescript": "^7.7.7",
+    "jest": "^24.9.0",
+    "typescript": "^3.5.3"
+  },
+  "keywords": [
+    "typed",
+    "typing",
+    "easy",
+    "typer",
+    "easytyper",
+    "easy-typer",
+    "easy-typer-js"
+  ]
+}
