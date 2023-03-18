@@ -34,7 +34,7 @@
 					</view>
 				</view>
 				<!-- 防止消息底部被遮 -->
-				<view style="height: 130rpx;">
+				<view style="height: 180rpx;">
 				</view>
 			</view>
 		</scroll-view>
@@ -75,7 +75,7 @@
 				showShareBtn: true,
 				rewardedVideoAd: null, //广告
 				num: 5, //次数
-				apiurl: 'https://express-web-fraework-zt-vdkxnpulus.us-west-1.fcapp.run', //后端转发地址
+				apiurl: 'https://chatgptest-node-chatgptest-node-oozhtxrqgh.us-west-1.fcapp.run', //后端转发地址
 				api: '', //在此输入你的apikey
 				isScroll: true, //是否可以滑动
 				userAvatar: '', //头像
@@ -141,7 +141,7 @@
 						console.log('222fail:' + JSON.stringify(err));
 					}
 				})
-				this.num = 3;
+				this.num += 3;
 				this.showShareBtn = false;
 			},
 
@@ -178,7 +178,7 @@
 					success: (res) => {
 						if (res.data.code == 200) {
 							let text = res.data.data.choices[0].message.content.replace(/[\r\n][\r\n]/, "")
-							this.msgList.push(this.config)
+							this.msgList.push(JSON.parse(JSON.stringify(this.config)))
 							new EasyTyper(this.msgList[this.msgList.length - 1], text)
 							this.isRequesting = false;
 							this.num--
@@ -191,16 +191,18 @@
 								that.intoindex = "text" + (this.msgList.length - 1)
 							});
 						} else {
-							this.msgList.push(this.config)
+							this.msgList.push(JSON.parse(JSON.stringify(this.config)))
 							new EasyTyper(this.msgList[this.msgList.length - 1], this.errorMsg)
 							this.isRequesting = false;
+							this.msgLoad = false
 						}
 					},
 					fail: (err) => {
 						console.log(3344444, '失败');
-						this.msgList.push(this.config)
-						new EasyTyper(this.msgList[this.msgList.length - 1], errorMsg)
+						this.msgList.push(JSON.parse(JSON.stringify(this.config)))
+						new EasyTyper(this.msgList[this.msgList.length - 1],  this.errorMsg)
 						this.isRequesting = false;
+						this.msgLoad = false
 					}
 				})
 			},
