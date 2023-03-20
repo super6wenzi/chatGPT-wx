@@ -44,6 +44,7 @@
 				分享获取次数
 			</button>
 			<view class="inpubut">
+				<uni-icons type="settings-filled" color="#fff" size="25" @click="showDrawer"></uni-icons>
 				<input v-model="msg" class="dh-input" type="text" @confirm="sendMsg" confirm-type="search"
 					placeholder-class="my-neirong-sm" placeholder="描述您的问题" @blur="isScroll=true;"
 					@focus="isScroll=false;" />
@@ -51,15 +52,27 @@
 					class="btn">{{num<=0?'获取次数':isRequesting?'请求中...':sentext}}</button>
 			</view>
 		</view>
-
+		<!-- 预设文本 -->
+		<uni-drawer ref="showDrawer" mode="left" :mask-click="true">
+			<view class="drawer-title">
+				你想AI扮演什么角色？
+			</view>
+			<scroll-view style="height: 90%;" scroll-y="true" class="drawer-list">
+				<view v-for="(item,index) in promptList" :key="index" @click="setPrompt(item)">
+					{{index+1}}.{{item.title}}
+				</view>
+			</scroll-view>
+		</uni-drawer>
 	</view>
 </template>
 
 <script>
 	import EasyTyper from 'easy-typer-js'
+	import { promptList } from '@/static/js/prompt.js'
 	export default {
 		data() {
 			return {
+				promptList,
 				errorMsg: '(￣ε ￣)不好意思呀~~~当前调用的人太多，服务器有点承受不过来，请稍后重试',
 				config: {
 					output: '',
@@ -101,6 +114,7 @@
 			}
 		},
 		onLoad() {
+			console.log(334444,promptList);
 			// 激励广告
 			if (wx.createRewardedVideoAd) {
 				this.rewardedVideoAd = wx.createRewardedVideoAd({
@@ -129,6 +143,14 @@
 			this.userAvatar = uni.getStorageSync('user-avatar')
 		},
 		methods: {
+			setPrompt(item){
+				this.msg=item.prompt;
+				this.sendMsg();				
+				this.$refs.showDrawer.close();
+			},
+			showDrawer(){
+				this.$refs.showDrawer.open();
+			},
 			shareFriends() {
 				uni.share({
 					provider: 'weixin',
@@ -194,6 +216,7 @@
 							this.msgList.push(JSON.parse(JSON.stringify(this.config)))
 							new EasyTyper(this.msgList[this.msgList.length - 1], this.errorMsg)
 							this.isRequesting = false;
+							this.num--
 							this.msgLoad = false
 						}
 					},
@@ -201,6 +224,7 @@
 						console.log(3344444, '失败');
 						this.msgList.push(JSON.parse(JSON.stringify(this.config)))
 						new EasyTyper(this.msgList[this.msgList.length - 1],  this.errorMsg)
+						this.num--
 						this.isRequesting = false;
 						this.msgLoad = false
 					}
@@ -215,9 +239,18 @@
 	page {
 		height: 100%;
 	}
-
+	.drawer-list{
+		padding:0 20rpx;
+	}
 	.advertising {}
-
+	.drawer-title{
+		text-align: center;
+		padding: 20rpx;
+		color:  #616161;
+	}
+	.drawer-list view{
+		margin-top: 20rpx;
+	}
 	.bg {
 		/* overflow: scroll; */
 		/* background: url('../../static/6.png') no-repeat;
