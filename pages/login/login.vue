@@ -25,9 +25,23 @@
 		data() {
 			return {
 				avatarUrl:'',
+				interstitialAd:null
 			}
 		},
 		onLoad() {
+			// 在页面onLoad回调事件中创建插屏广告实例
+			if (wx.createInterstitialAd) {
+			  this.interstitialAd = wx.createInterstitialAd({
+			    adUnitId: 'adunit-5c5fa677d178707b'
+			  })
+			  this.interstitialAd.onLoad(() => {})
+			  this.interstitialAd.onError((err) => {})
+			  this.interstitialAd.onClose(() => {})
+			  // 在适合的场景显示插屏广告
+			    this.interstitialAd.show().catch((err) => {
+			      console.error(err)
+			    })
+			}
 			wx.showShareMenu({
 			        withShareTicket:true,
 			        //设置下方的Menus菜单，才能够让发送给朋友与分享到朋友圈两个按钮可以点击

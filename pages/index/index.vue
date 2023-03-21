@@ -44,7 +44,7 @@
 				分享获取次数
 			</button>
 			<view class="inpubut">
-				<uni-icons type="settings-filled" color="#fff" size="25" @click="showDrawer"></uni-icons>
+				<uni-icons type="settings-filled" color="#fff" size="25" @click="showDrawer" class="ml-10"></uni-icons>
 				<input v-model="msg" class="dh-input" type="text" @confirm="sendMsg" confirm-type="search"
 					placeholder-class="my-neirong-sm" placeholder="描述您的问题" @blur="isScroll=true;"
 					@focus="isScroll=false;" />
@@ -250,6 +250,9 @@
 	}
 	.drawer-list view{
 		margin-top: 20rpx;
+	}
+	.ml-10{
+		margin-left: 10rpx;
 	}
 	.bg {
 		/* overflow: scroll; */
