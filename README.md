@@ -6,8 +6,8 @@ TG群：https://t.me/+X_W1P9MLinE0MDk1
 # chatGPT-wx
 关于由openAI公司发布的大型预训练语言模型chatGPT接入微信小程序.
 
-后端代码在公众号：Web3研究工厂
-chatGPT机器人体验 在公众号：
+# 后端代码在公众号：Web3研究工厂
+# chatGPT机器人体验 在公众号：
 ![69e59d4bc547256c0b0cd3ebc5415a5](https://user-images.githubusercontent.com/48462615/222143450-d9c69d6f-8654-4048-8988-61ee157b77cb.png)
 或者直接小程序搜索：GG智能聊天AI机器人
 
