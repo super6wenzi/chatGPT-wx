@@ -10,9 +10,12 @@ TG群：https://t.me/+X_W1P9MLinE0MDk1
 # chatGPT机器人体验 在公众号：
 ![69e59d4bc547256c0b0cd3ebc5415a5](https://user-images.githubusercontent.com/48462615/222143450-d9c69d6f-8654-4048-8988-61ee157b77cb.png)
 或者直接小程序搜索：GG智能机器人
+
+
+
+
 微信小程序：
 ![61dc84f0ca3e4106fc9f347a41222ef](https://github.com/super6wenzi/chatGPT-wx/assets/48462615/fd55ff02-4c53-4eb5-924f-88d234da8b04)
-
 
 有问题加我微信吧   备注chatGPT
 ![code(1)](https://user-images.githubusercontent.com/48462615/223733225-44475a84-7d97-4011-89cf-7acad9128ca6.jpg)
